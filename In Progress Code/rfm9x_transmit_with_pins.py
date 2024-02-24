@@ -11,7 +11,7 @@ import digitalio
 import adafruit_rfm9x
 
 # set the time interval (seconds) for sending packets
-transmit_interval = 10
+transmit_interval = 8
 
 # Define radio parameters.
 RADIO_FREQ_MHZ = 915.0  # Frequency of the radio in Mhz. Must match your
@@ -38,7 +38,8 @@ rfm9x.tx_power = 23
 # initialize counter
 counter = 0
 # send a broadcast mesage
-rfm9x.send(bytes("message number {}".format(counter), "UTF-8"))
+# rfm9x.send(bytes("message number {}".format(counter), "UTF-8"))
+rfm9x.send(bytes("Wake Up Message", "UTF-8"))
 
 # Wait to receive packets.
 print("Waiting for packets...")
@@ -52,13 +53,21 @@ while True:
     if packet is not None:
         # Received a packet!
         # Print out the raw bytes of the packet:
+        print(packet)
         print("Received (raw bytes): {0}".format(packet))
+        test = str("{0}".format(packet))
         # send reading after any packet received
+        if test == "bytearray(b'ping')":
+             print("Transmiting: Pong")
+             rfm9x.send(bytes("Pong", "UTF-8"))
+
     if time.monotonic() - time_now > transmit_interval:
         # reset timeer
         time_now = time.monotonic()
         # clear flag to send data
         send_reading = False
         counter = counter + 1
-        print("Transmitiing")
-        rfm9x.send(bytes("message number {}".format(counter), "UTF-8"))
+        print("Transmitting")
+        rfm9x.send(bytes("data=b'test", "UTF-8"))
+        
+    
