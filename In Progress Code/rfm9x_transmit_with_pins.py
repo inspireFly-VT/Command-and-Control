@@ -58,8 +58,11 @@ while True:
         test = str("{0}".format(packet))
         # send reading after any packet received
         if test == "bytearray(b'ping')":
-             print("Transmiting: Pong")
+             print("Transmitting: Pong")
              rfm9x.send(bytes("Pong", "UTF-8"))
+             
+        rssi = rfm9x.last_rssi
+        print("Received signal strength: {0} dB".format(rssi))
 
     if time.monotonic() - time_now > transmit_interval:
         # reset timeer
