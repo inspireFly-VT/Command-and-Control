@@ -17,6 +17,6 @@ print(image_in_bytes)
 
 with open('test.jpg', 'wb') as f:
     f.write(image_in_bytes)
-    print("File Saves Somewhere")
+    print("File Saves at C:\Users\*USER NAME HERE*")
 
 
