@@ -7,7 +7,7 @@ from io import BytesIO
 
 out = BytesIO()
 # Read Image 
-with Image.open(r"C:\Users\7domo\Pictures\rebel friend.jpg",'r') as img:
+with Image.open(r"C:\Users\*USER NAME HERE*\Pictures\*PICTURE NAME HERE*.jpg",'r') as img:
     img.show()  #show image for fun
     img.save(out, format="JPEG") #image data now saved in 'out'
 image_in_bytes = out.getvalue() #loads image data as bytes into image_in_bytes, can transmit this data?
