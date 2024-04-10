@@ -1,20 +1,21 @@
-import binascii
 crctest = 0x1D0F
-datatest = bytes('123456789', 'UTF-8')
+datatest = bytes('Hello', 'UTF-8')
 print(datatest)
 
-def calc(crc, data: bytes) -> int:
+def calculate_crc16(data: bytes) -> int:
+    crc = 0x1D0F #CCITT-False is 0xFFFF, 
+    poly = 0x1021  # CRC-CCITT polynomial
+
+
     for byte in data:
-        crc ^= byte
+        crc ^= (byte << 8)
         for _ in range(8):
             if crc & 0x8000:
-                crc <<= 1
-                crc ^= 0x1021
+                crc = (crc << 1) ^ poly
             else:
-                crc >>= 1
+                crc <<= 1
+            crc &= 0xFFFF  # Limit to 16 bits
+
     return crc
 
-print(hex(binascii.crc_hqx(datatest, crctest)))
-
-# placeholder = calc(crctest, datatest)
-# print(hex(placeholder))
+print(hex(calculate_crc16(datatest)))

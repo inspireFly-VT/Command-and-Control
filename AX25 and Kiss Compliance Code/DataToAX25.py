@@ -50,17 +50,19 @@ def encode_ax25_frame(data: bytes, dest_callsign: str, source_callsign: str) -> 
     return ax25_frame
 
 def calculate_crc16(data: bytes) -> int:
-    """
-    Calculates the CRC-16 (CCITT) checksum for the given data.
+    crc = 0x1D0F #CCITT-False is 0xFFFF, 
+    poly = 0x1021  # CRC-CCITT polynomial
 
-    Args:
-        data (bytes): Data to compute the checksum for.
+    for byte in data:
+        crc ^= (byte << 8)
+        for _ in range(8):
+            if crc & 0x8000:
+                crc = (crc << 1) ^ poly
+            else:
+                crc <<= 1
+            crc &= 0xFFFF  # Limit to 16 bits
 
-    Returns:
-        int: CRC-16 value.
-    """
-    Init = 0x1D0F
-    return binascii.crc_hqx(data, Init)
+    return crc
 
 def decode_ax25_frame(frame):
     if len(frame) < 14:
