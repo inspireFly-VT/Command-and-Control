@@ -100,5 +100,8 @@ data_payload = b"Hello, world!"
 dest_callsign = "K4KDJ"
 source_callsign = "K4KDJ"
 ax25_frame = encode_ax25_frame(data_payload, dest_callsign, source_callsign)
-print("AX.25 Frame:", ax25_frame.hex())
-decode_ax25_frame(ax25_frame)
+# print("AX.25 Frame:", ax25_frame.hex())
+# decode_ax25_frame(ax25_frame)
+
+test = b'\x7e\x96\x68\x97\xaa\x94\x42\x65\x96\x68\xb7\x88\x94\x54\x62\x03\xf0\x48\x75\x6c\x6c\x6f\x20\x77\xef\x72\x6d\x66\x21\x2a\x3a\x44\x34\x60\x7e'
+decode_ax25_frame(test)
