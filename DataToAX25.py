@@ -1,6 +1,6 @@
 import binascii
 
-def encode_ax25_frame(data: bytes, dest_callsign: str, source_callsign: str, operation: int) -> bytes:
+def encode_ax25_frame(data: bytes, dest_callsign: str, source_callsign: str) -> bytes:
     """
     Encodes a data payload into an AX.25 frame.
 
@@ -38,31 +38,6 @@ def encode_ax25_frame(data: bytes, dest_callsign: str, source_callsign: str, ope
     ax25_frame += b'\xF0'
 
     # Data payload
-    if operation == 20:
-        print("joke")
-        ax25_frame += b'\x20'
-    elif operation == 21:
-        print("beacon w no pic")
-        ax25_frame += b'\x21'
-    elif operation == 22:
-        print("beacon w pic")
-        ax25_frame += b'\x22'
-    elif operation == 23:
-        print("face")
-        ax25_frame += b'\x23'
-    elif operation == 25:
-        print("soh with pic")
-        ax25_frame += b'\x25'
-    elif operation == 26:
-        print("soh w no pic")
-        ax25_frame += b'\x26'
-    elif operation == 28:
-        print("selfie")
-        ax25_frame += b'\x28'
-    else:
-        print("beacon")
-        ax25_frame += b'\x20'
-
     ax25_frame += data
 
     # FCS (Frame Check Sequence) - Calculate CRC16 and append
@@ -102,8 +77,7 @@ def decode_ax25_frame(frame):
     source = frame[8:15]
     control = frame[15:16]
     protocol_id = frame[16]
-    operation = frame[17:18]
-    data = frame[19:-3]  # Data field
+    data = frame[17:-3]  # Data field
     fcs = frame[-3:-1]  # Frame Check Sequence
     flag2 = frame[-1:]
 
@@ -117,7 +91,6 @@ def decode_ax25_frame(frame):
     print("Source Address:", source_address)
     print("Control:", control.hex())
     print("Protocol ID:", hex(protocol_id))
-    print("Operation", operation.hex())
     print("Data:", data.hex())
     print("FCS:", fcs.hex())
     print("Flag2:", flag2.hex())

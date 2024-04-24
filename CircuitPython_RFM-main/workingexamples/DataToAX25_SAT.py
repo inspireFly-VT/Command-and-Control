@@ -37,32 +37,33 @@ def encode_ax25_frame(data: bytes, dest_callsign: str, source_callsign: str, ope
     # Protocol ID (0xF0 for no layer 3 protocol)
     ax25_frame += b'\xF0'
 
-    # Data payload
+    # Operation
     if operation == 20:
-        print("joke")
+#         print("joke")
         ax25_frame += b'\x20'
     elif operation == 21:
-        print("beacon w no pic")
+#         print("beacon w no pic")
         ax25_frame += b'\x21'
     elif operation == 22:
-        print("beacon w pic")
+#         print("beacon w pic")
         ax25_frame += b'\x22'
     elif operation == 23:
-        print("face")
+#         print("face")
         ax25_frame += b'\x23'
     elif operation == 25:
-        print("soh with pic")
+#         print("soh with pic")
         ax25_frame += b'\x25'
     elif operation == 26:
-        print("soh w no pic")
+#         print("soh w no pic")
         ax25_frame += b'\x26'
     elif operation == 28:
-        print("selfie")
+#         print("selfie")
         ax25_frame += b'\x28'
     else:
         print("beacon")
-        ax25_frame += b'\x20'
+        ax25_frame += b'\x21'
 
+    #Data
     ax25_frame += data
 
     # FCS (Frame Check Sequence) - Calculate CRC16 and append
@@ -101,9 +102,9 @@ def decode_ax25_frame(frame):
     destination = frame[1:8]
     source = frame[8:15]
     control = frame[15:16]
-    protocol_id = frame[16]
+    protocol_id = frame[16:17]
     operation = frame[17:18]
-    data = frame[19:-3]  # Data field
+    data = frame[18:-3]  # Data field
     fcs = frame[-3:-1]  # Frame Check Sequence
     flag2 = frame[-1:]
 
@@ -112,30 +113,55 @@ def decode_ax25_frame(frame):
     source_address = ''.join(chr(byte >> 1) for byte in source)
 
     # Print decoded information
-    print("Flag1:", flag1.hex())
+    print("Flag1:", flag1)
     print("Destination Address:", destination_address)
     print("Source Address:", source_address)
-    print("Control:", control.hex())
-    print("Protocol ID:", hex(protocol_id))
-    print("Operation", operation.hex())
-    print("Data:", data.hex())
-    print("FCS:", fcs.hex())
-    print("Flag2:", flag2.hex())
+    print("Control:", control)
+    print("Protocol ID:",protocol_id)
+    print("Operation:", operation)
+    print("Data:", data)
+    print("FCS:", fcs)
+    print("Flag2:", flag2)
     
-#     recalc_fcs = b''
-#     recalc_fcs += flag1 + destination + source + control + protocol_id + data
-#     newCrc = calculate_crc16(recalc_fcs).to_bytes(2, 'big')
+    test = b''
+    test = test + flag1
+    test = test + destination
+    test = test + source
+    test = test + control
+    test = test + protocol_id
+    test = test + operation
+    test = test + data
+    newCrc = calculate_crc16(test).to_bytes(2, 'big')
     
-    if data.decode("UTF-8").count("ff") >= 4:
-        print("This worked")
-        retransmit = True
-    
+    fcsCorrect = True
+    if(newCrc == fcs):
+        fcsCorrect = True
+    else:
+        fcsCorrect = False
+    print("Calculated crc: ", newCrc)
+    print("Received crc: ", fcs)
+
+    returnValue = 0
+    if operation == b'\x16':
+        print("Send SOH")
+        returnValue = 25
+    elif operation == b'\x32':
+        print("Send Picture")
+        returnValue = 28
+    elif operation == b'\31':
+        print("Send Take Picture")
+        returnValue = -1
+    else :
+        print("TODO: Implement retry previous task")
+    # TODO: Implement if statmens for all possible operation modes, missing beacon and stuff
+        
+    return returnValue, fcsCorrect
         
     
-# Example usage
-data_payload = b"Hello, world!"
-dest_callsign = "K4KDJ"
-source_callsign = "K4KDJ"
-ax25_frame = encode_ax25_frame(data_payload, dest_callsign, source_callsign)
-print("AX.25 Frame:", ax25_frame.hex())
-decode_ax25_frame(ax25_frame)
+# # Example usage
+# data_payload = b"Hello, world!"
+# dest_callsign = "K4KDJ"
+# source_callsign = "K4KDJ"
+# ax25_frame = encode_ax25_frame(data_payload, dest_callsign, source_callsign)
+# print("AX.25 Frame:", ax25_frame.hex())
+# decode_ax25_frame(ax25_frame)
