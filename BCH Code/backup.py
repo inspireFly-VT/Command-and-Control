@@ -1,3 +1,6 @@
+@ -1,2 +1,61 @@
+numnber = 1
+print("test " + str(numnber+1))
 from bchlib import BCH
 
 # bch = BCH(t=6, m=8) t is the number of correctable errors, m is variable, n = 2^m -1 is total size of packet

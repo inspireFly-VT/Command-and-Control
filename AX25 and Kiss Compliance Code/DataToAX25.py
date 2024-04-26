@@ -15,6 +15,8 @@ def encode_ax25_frame(data: bytes, dest_callsign: str, source_callsign: str, ope
     # Start flag (0x7E)
     ax25_frame = b'\x7E'
 
+    # TODO: add kiss FEND(0xC0)
+
     # Destination address (7 bytes)
     dest_address = f"{dest_callsign}"
     dest_address_bytes = bytes(dest_address, 'ascii')
@@ -64,6 +66,8 @@ def encode_ax25_frame(data: bytes, dest_callsign: str, source_callsign: str, ope
         ax25_frame += b'\x20'
 
     ax25_frame += data
+
+    # TODO: Add KISS FEND(0xC0)
 
     # FCS (Frame Check Sequence) - Calculate CRC16 and append
     crc = calculate_crc16(ax25_frame)
