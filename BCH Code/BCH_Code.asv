@@ -1,0 +1,66 @@
+clc;
+clear;
+M = 8;
+n = 2^M - 1; %codeword length
+k = 207; %message length
+% % nwords = 1; %number of words to encode
+% % msgTx = gf([1 0 1 0]);
+% t = bchnumerr(n,k)
+% % enc = bchenc(msgTx, n, k);
+% % msgRx = bchdec(enc, n, k);
+% 
+% 
+data = randi(1,n);
+data_enc = randi(1,k);
+data_ench = bchenc(data_enc,n,k);
+
+data_recieved(n)
+
+
+for ebno = (0:12)
+    data_transmit = awgn(data,ebno);
+    data_transmit_enc = awgn(data_enc,ebno);
+    for i = 1:n
+        if(data_transmit > 0)
+            data_recieved(i) = 1;
+        else
+            data_recieved(i) = 0;
+    end
+
+end
+
+% clear; close all; clc;
+% c=0;
+% n=255;                                              %Codeword length
+% k=239;                                              %Message length
+% rate=k/n;                                           %Code rate
+% N=1000;                                             %Number of words
+% for EbNoc=0:1:10                                    %Ratio of bit energy to noise power spectral density
+% c=c+1;
+% X=randi([0 1],N,k);                                 %Signal
+% XGF=gf(X);                                          %Create Galois field variables
+% XBCH=bchenc(XGF,n,k);                               %Encodes the input message using an (n,k) BCH encoder
+% XBCHL=XBCH~=0;                                      %Convert the coded message to logical variable
+% XBCHLV=reshape(XBCHL',1,numel(XBCHL));              %Reshape the matrix to vector
+% MX=2*XBCHLV-1;                                      %BPSK modulation
+% SNR=EbNoc+10*log10(rate)-10*log10(0.5);             %SNR equation
+% GX=awgn(MX,SNR,'measured');                         %Adding Gaussian noise
+% DX=GX>0;                                            %Detection
+% DXM=vec2mat(DX,n);                                  %Reshape the vector to matrix
+% DXMGF=gf(DXM);                                      %Create Galois field variables
+% DXMGFU=bchdec(DXMGF,n,k);                           %Decodes the received signal in code using an (N,K) BCH decoder
+% DXMGFUL=DXMGFU~=0;                                  %Convert the uncoded message to logical variable
+% E=length(find(DXMGFUL~=X));                         %Error
+% EbNo(c)=EbNoc;                                  
+% BER(c)=E/(N*k);                                     %Bit error rate
+% end
+% semilogy(EbNo,BER,'r-');
+% grid on;
+% xlabel('Eb/No (dB)'); ylabel('BER');
+
+
+
+
+
+
+
